@@ -53,6 +53,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="InputSequenceWindow.xaml.cs">
+      <DependentUpon>InputSequenceWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModel\BaseViewModel.cs" />
+    <Compile Include="ViewModel\SortListSummaryViewModel.cs" />
+    <Compile Include="ViewModel\SortNumsViewModel.cs" />
+    <Page Include="InputSequenceWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -61,6 +71,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Converter\ExchangeElementBackgrondConverter.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -91,6 +102,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ExchangeSortAlgorithm\ExchangeSortAlgorithm.csproj">
+      <Project>{0bf31f0a-6af6-478f-a54d-3cd13e690986}</Project>
+      <Name>ExchangeSortAlgorithm</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

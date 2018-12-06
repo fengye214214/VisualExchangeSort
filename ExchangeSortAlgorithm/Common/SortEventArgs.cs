@@ -7,11 +7,6 @@ using System.Threading.Tasks;
 namespace ExchangeSortAlgorithm
 {   
     /// <summary>
-    /// 用于开始排序时
-    /// </summary>
-    /// <param name="args"></param>
-    public delegate void StartSortEventHandler(SortEventArgs args);
-    /// <summary>
     /// 用于排序进行中
     /// </summary>
     /// <param name="args"></param>
@@ -29,10 +24,6 @@ namespace ExchangeSortAlgorithm
     public class SortEventArgs : EventArgs
     {   
         /// <summary>
-        /// 原始排序列表
-        /// </summary>
-        public IList<object> OriginalSortList { get; set; }
-        /// <summary>
         /// 排序完成列表
         /// </summary>
         public IList<object> SortCompletedList { get; set; }
@@ -47,14 +38,17 @@ namespace ExchangeSortAlgorithm
         /// </summary>
         public int CurrentExchangeElementIndex { get; set; }
         /// <summary>
+        /// 函数执行此次
+        /// </summary>
+        public int ExecuteCount { get; set; }
+        /// <summary>
         /// 构造方法
         /// </summary>
         public SortEventArgs()
         {
-        //    OriginalSortList = new List<Object>();
-        //    SortCompletedList = new List<Object>();
             CurrentSortIndex = -1;
             CurrentExchangeElementIndex = -1;
+            ExecuteCount = 0;
         }
     }
 }

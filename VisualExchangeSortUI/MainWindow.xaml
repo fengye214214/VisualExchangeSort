@@ -5,8 +5,114 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VisualExchangeSortUI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="" Height="450" Width="800" WindowStartupLocation="CenterScreen" WindowState="Maximized">
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="booleanToVisibilityConverter"></BooleanToVisibilityConverter>
+        <local:ExchangeElementBackgrondConverter x:Key="exchangeElementBackgrondConverter"></local:ExchangeElementBackgrondConverter>
+
+        <!--正在排序的列表的嵌套ListBox数据模板-->
+        <DataTemplate x:Key="SortSequenceShowListListDataTemplate" DataType="{x:Type ListBox}">
+            <Border  Margin="5">
+                <!--背景色如果当前索引的数字发生交换则背景色为红色-->
+                <Border.Background>
+                    <MultiBinding Converter="{StaticResource exchangeElementBackgrondConverter}">
+                        <Binding Path="CurrentExchangeElementIndex"/>
+                        <Binding Path="CurrentIndex"/>
+                    </MultiBinding>
+                </Border.Background>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="5"/>
+                    </Grid.RowDefinitions>
+                    <!--排序数字-->
+                    <TextBlock Text="{Binding SortNum}"></TextBlock>
+                    <!--下标-->
+                    <Border Grid.Row="1" Background="Black" Visibility="{Binding IsIndexVisibile, Converter={StaticResource booleanToVisibilityConverter}}"/>
+                </Grid>
+            </Border>
+        </DataTemplate>
+
+        <!--正在排序的列表的内部嵌套ListBox样式-->
+        <Style x:Key="SortSequenceShowListListBoxStyle" TargetType="{x:Type ListBox}">
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Hidden"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="MinHeight" Value="30"/>
+            <Setter Property="ItemTemplate" Value="{StaticResource SortSequenceShowListListDataTemplate}"/>
+            <Setter Property='ItemsPanel'>
+                <Setter.Value>
+                    <ItemsPanelTemplate>
+                        <!--让项水平显示-->
+                        <WrapPanel  Width="{Binding (FrameworkElement.ActualWidth), RelativeSource={RelativeSource  AncestorType=ScrollContentPresenter}}"></WrapPanel>
+                    </ItemsPanelTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!--正在排序的列表的ListBox外部样式-->
+        <DataTemplate x:Key="SortSequenceListBoxDataTemplate" DataType="{x:Type ListBox}">
+            <Border  Margin="0 0 5 0">
+                <Grid>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                        <TextBlock VerticalAlignment="Center">第</TextBlock>
+                        <TextBlock VerticalAlignment="Center" Text="{Binding ExecuteCount}"></TextBlock>
+                        <TextBlock VerticalAlignment="Center">次</TextBlock>
+                        <ListBox ItemsSource="{Binding SortingList}" VerticalAlignment="Center" Margin="15 0 0 0" Style="{StaticResource SortSequenceShowListListBoxStyle}">
+                        </ListBox>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </DataTemplate>
         
+        <!--排序结果ListBox样式-->
+        <Style x:Key="SortSequenceListBoxStyle" TargetType="{x:Type ListBox}">
+            <Setter Property="MinHeight" Value="30"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="ItemTemplate" Value="{StaticResource SortSequenceListBoxDataTemplate}"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <TabControl>
+            <TabItem Header="交换排序" Selector.IsSelected="True">
+                <Grid>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <!--输入数字ListBox-->
+                        <ComboBox x:Name="com_inputSequence" FontSize="20" SelectionChanged="com_inputSequence_SelectionChanged"></ComboBox>
+                        <Button Grid.Row="1" x:Name="btn_inputSequence" FontSize="16" Margin="5" Width="120" Height="30" Click="btn_inputSequence_Click">输入序列</Button>
+                        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                            <RadioButton x:Name="rad_BubbleSort" GroupName="sort" IsChecked="True" FontWeight="Bold" Click="rad_BubbleSort_Click" FontSize="20" VerticalAlignment="Center">冒泡排序</RadioButton>
+                            <RadioButton x:Name="rad_QuickSort" GroupName="sort" FontSize="20" FontWeight="Bold" VerticalAlignment="Center" Click="rad_BubbleSort_Click" Margin="20 0 0 0">快速排序</RadioButton>
+                        </StackPanel>
+                        <Button x:Name="btn_startSort" Grid.Row="3"  FontSize="16" Click="btn_startSort_Click" Width="120" Height="30" Margin="0 5 0 0" IsEnabled="False">开始排序</Button>
+                        <StackPanel Grid.Row="4"  Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
+                            <CheckBox x:Name="rad_isSingle" FontSize="16" VerticalAlignment="Center" Click="rad_isSingle_Click">单步模式</CheckBox>
+                            <Button x:Name="btn_Next" FontSize="16" Click="btn_Next_Click" Visibility="Collapsed" Width="120" Height="30" IsEnabled="False" Margin="20 0 0 0">下一步</Button>
+                            <Button x:Name="btn_Preview" FontSize="16" Click="btn_Preview_Click" Visibility="Collapsed" IsEnabled="False" Width="120" Height="30" Margin="20 0 0 0">上一步</Button>
+                        </StackPanel>
+                        <StackPanel Grid.Row="5">
+                            <TextBlock >排序结果:</TextBlock>
+                            <TextBlock Foreground="Red" Margin="10 0 0 0">数字的黑色下标，表示排序当前的索引</TextBlock>
+                            <TextBlock Foreground="Red" Margin="10 0 0 0">数字有红色色背景，说明在此索引处元素位置发生了交换</TextBlock>
+                        </StackPanel>
+                        <!--结果输出ListBox-->
+                        <ListBox x:Name="ls_sortSequence" Grid.Row="6" Style="{StaticResource SortSequenceListBoxStyle}">
+                        </ListBox>
+                    </Grid>
+                    <TextBlock x:Name="txt_info" Foreground="Red" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed">正在排序...</TextBlock>
+                </Grid>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>

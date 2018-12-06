@@ -13,14 +13,11 @@ namespace ExchangeSortAlgorithm
     {
         /// <summary>
         /// 交换排序算法
+        /// <para>快速排序和冒泡排序都实现此方法</para>
         /// </summary>
         /// <param name="sortList">排序列表</param>
         /// <returns></returns>
         IEnumerable<T> ExchangeSort(IEnumerable<T> sortList);
-        /// <summary>
-        /// 排序开始时的事件
-        /// </summary>
-        event StartSortEventHandler StartSortEvent;
         /// <summary>
         /// 排序进行中事件
         /// </summary>
