@@ -151,7 +151,7 @@ namespace VisualExchangeSortUI
                     _exchangeSort = new QuickSort<string>();
                 }
                 _exchangeSort.ProcessSortEvent += _bubbleSort_ProcessSortEvent;
-                _exchangeSortInt.EndSortEvent += _bubbleSortInt_EndSortEvent;
+                _exchangeSort.EndSortEvent += _bubbleSortInt_EndSortEvent;
                 Task.Factory.StartNew(new Action(() =>
                 {
                         //如果里面有非数字
